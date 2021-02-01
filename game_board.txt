@@ -1,0 +1,41 @@
+Position,Label,Category
+0,Go,Other
+1,Old Kent Road,Brown
+2,Community Chest 1,Community Chest
+3,Whitechapel Road,Brown
+4,Income Tax,Tax
+5,Kings Cross Station,Station
+6,The Angel Islington,Light Blue
+7,Chance 1,Chance
+8,Euston Road,Light Blue
+9,Pentonville Road,Light Blue
+10,Just Visiting,Other
+11,Pall Mall,Pink
+12,Electric Company,Utility
+13,Whitehall,Pink
+14,Northumberland Avenue,Pink
+15,Marylebone Station,Station
+16,Bow Street,Orange
+17,Community Chest 2,Community Chest
+18,Marlborough Street,Orange
+19,Vine Street,Orange
+20,Free Parking,Other
+21,Strand,Red
+22,Chance 2,Chance
+23,Fleet Street,Red
+24,Trafalgar Square,Red
+25,Fenchurch Street Station,Station
+26,Leicester Square,Yellow
+27,Coventry Street,Yellow
+28,Water Works,Utility
+29,Picadilly,Yellow
+30,Go To Jail,Other
+31,Regent Street,Green
+32,Oxford Street,Green
+33,Community Chest 3,Community Chest
+34,Bond Street,Green
+35,Liverpool Street Station,Station
+36,Chance 3,Chance
+37,Park Lane,Dark Blue
+38,Super Tax,Tax
+39,Mayfair,Dark Blue
