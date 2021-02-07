@@ -1,41 +1,41 @@
-Position,Label,Category
-0,Go,Other
-1,Old Kent Road,Brown
-2,Community Chest 1,Community Chest
-3,Whitechapel Road,Brown
-4,Income Tax,Tax
-5,Kings Cross Station,Station
-6,The Angel Islington,Light Blue
-7,Chance 1,Chance
-8,Euston Road,Light Blue
-9,Pentonville Road,Light Blue
-10,Just Visiting,Other
-11,Pall Mall,Pink
-12,Electric Company,Utility
-13,Whitehall,Pink
-14,Northumberland Avenue,Pink
-15,Marylebone Station,Station
-16,Bow Street,Orange
-17,Community Chest 2,Community Chest
-18,Marlborough Street,Orange
-19,Vine Street,Orange
-20,Free Parking,Other
-21,Strand,Red
-22,Chance 2,Chance
-23,Fleet Street,Red
-24,Trafalgar Square,Red
-25,Fenchurch Street Station,Station
-26,Leicester Square,Yellow
-27,Coventry Street,Yellow
-28,Water Works,Utility
-29,Picadilly,Yellow
-30,Go To Jail,Other
-31,Regent Street,Green
-32,Oxford Street,Green
-33,Community Chest 3,Community Chest
-34,Bond Street,Green
-35,Liverpool Street Station,Station
-36,Chance 3,Chance
-37,Park Lane,Dark Blue
-38,Super Tax,Tax
-39,Mayfair,Dark Blue
+Position	Label	Category	Price
+0	Go	Other	0
+1	Old Kent Road	Brown	60
+2	Community Chest 1	Community Chest	0
+3	Whitechapel Road	Brown	60
+4	Income Tax	Tax	0
+5	Kings Cross Station	Station	200
+6	The Angel Islington	Light Blue	100
+7	Chance 1	Chance	0
+8	Euston Road	Light Blue	100
+9	Pentonville Road	Light Blue	120
+10	Just Visiting	Other	0
+11	Pall Mall	Pink	140
+12	Electric Company	Utility	150
+13	Whitehall	Pink	140
+14	Northumberland Avenue	Pink	160
+15	Marylebone Station	Station	200
+16	Bow Street	Orange	180
+17	Community Chest 2	Community Chest	0
+18	Marlborough Street	Orange	180
+19	Vine Street	Orange	200
+20	Free Parking	Other	0
+21	Strand	Red	220
+22	Chance 2	Chance	0
+23	Fleet Street	Red	220
+24	Trafalgar Square	Red	240
+25	Fenchurch Street Station	Station	200
+26	Leicester Square	Yellow	260
+27	Coventry Street	Yellow	260
+28	Water Works	Utility	150
+29	Picadilly	Yellow	280
+30	Go To Jail	Other	0
+31	Regent Street	Green	300
+32	Oxford Street	Green	300
+33	Community Chest 3	Community Chest	0
+34	Bond Street	Green	320
+35	Liverpool Street Station	Station	200
+36	Chance 3	Chance	0
+37	Park Lane	Dark Blue	350
+38	Super Tax	Tax	0
+39	Mayfair	Dark Blue	400

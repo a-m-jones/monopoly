@@ -3,9 +3,11 @@ import numpy as np
 import pandas as pd
 
 ## Read in the game board from csv file
-gameboard = pd.read_csv('./game_board.txt')
-## 
+gameboard = pd.read_csv('./game_board.txt', delimiter='\t')
+## Property categories taht can't be saved
 non_properties = ['Other', 'Community Chest', 'Chance', 'Tax']
+## List of all properties owned
+all_owned_properties = []
     
         
 def roll_dice():
@@ -24,48 +26,54 @@ def roll_dice():
     return value, double
     
         
-def have_turn(position, owned_properties):
+def have_turn(position, owned_properties, money):
     """
     Simulates a turn in a game (in development).
+
+    Inputs:
+    ----------
+    position: current position
+    owned_properties: list of properties owned by the player
+    money: player's cash
     
     Returns:
     ----------
-    roll: what was rolled
     position: current position on board
     double: whether or not a double was rolled
     current_property: current property on board
     """
+    ## 1) Roll
     roll, double = roll_dice()
+    ## 2) Update board position
     position += roll
+    ## 3) Check position number is on the board
     position = position - len(gameboard) if position > len(gameboard)-1 else position
+    ## 4) Find current property, category and price
     current_property = gameboard.at[position, 'Label']
     current_category = gameboard.at[position, 'Category']
-    if current_property not in owned_properties and current_category not in non_properties:
-        owned_properties.append(current_property)
-    return roll, position, double, current_property
-        
-        
-def play_minigame(N_turns):
-    """
-    Simulates a player moving around the board, and collecting properties.
-    Extra rolls from doubles are included within the turn, however have not
-    included 3 doubles in a row --> go to jail. Still in development.
-    """
-    position = 0
-    owned_properties = []
+    current_price    = gameboard.at[position, 'Price']
+    ## 5) Print current values
+    print("Roll: {}\nPosition: {}\nDouble: {}\nCurrent property: {}\n".format(
+    roll, position, double, current_property))
+    ## 6) If player has enough money and property not already bought --> option to buy it
+    if current_price <= money and current_property not in all_owned_properties and current_category not in non_properties:
+        while True:
+            answer = input("Do you want to buy {} for £{}? (Y or N)\n".format(current_property, current_price))
+            if answer in ['y', 'Y', 'yes', 'Yes']:
+                owned_properties.append(current_property)
+                all_owned_properties.append(current_property)
+                money = money - current_price
+                print("Bought {} for £{}. You have £{} left.\n".format(current_property, current_price, money))
+                break
+            elif answer in ['n', 'N', 'no', 'No']:
+                ## will need to implement option for others to buy in future
+                print("Rejected {}\n".format(current_property))
+                break
+            else:
+                print("Must choose either Y or N!")
 
-    print("{:<10} {:<10} {:<10} {:<10} {:<10}\n".format('Turn', 'Roll', 'Position', 'Double', 'Property'))
-    for i in range(N_turns):
-        roll, position, double, current_property = have_turn(position, owned_properties)
-        print("{:<10} {:<10} {:<10} {:<10} {:<10}".format(i+1, roll, position, double, current_property))
-        while double == True:
-            roll, position, double, current_property = have_turn(position, owned_properties)
-            print("{:<10} {:<10} {:<10} {:<10} {:<10}".format('', roll, position, double, current_property))
-        print("")
-    
-    print("Owned properties:\n")
-    for prop in owned_properties:
-        print(prop)
+    return position, double, money
+        
 
 
 def setup_game():
@@ -77,7 +85,12 @@ def setup_game():
     print("#"*28 + '\n')
 
     ## Record number of players
-    N_players = int(input("No. of players: "))
+    while True:
+        N_players = int(input("No. of players: "))
+        if N_players > 6:
+            print("Maximum number of players = 6\n")
+        else:
+            break
 
     ## Save player names and pieces to dictionary
     player_dict = {}
@@ -103,7 +116,8 @@ def setup_game():
 
         print("")
         pieces.remove(playing_piece)
-        player_dict[name] = [playing_piece]
+        ## build player dictionary with their piece, starting money, current position and list of owned properties
+        player_dict[name] = [playing_piece, 1500, 0, []]
 
     ## Roll to see who goes first - highest wins!
     print("\nRoll to see who goes first!\n")
@@ -126,10 +140,10 @@ def setup_game():
         max_roll_idxs = np.where(rolls == max_roll)[0] # the list indexes of the players who rolled the maximum 
         no_max_rolls = len(max_roll_idxs) # the number of people who rolled the maximum
         player_max_rolls = players[max_roll_idxs] # the players who rolled the maximum
-        ## If more than 1 person rolled the maximum, get them to roll again. This continues until a winner is decided.
         
+        ## If more than 1 person rolled the maximum, get them to roll again. This continues until a winner is decided.
         if no_max_rolls > 1:
-            str_to_print = ("{} " * no_max_rolls) + "have rolled the same highest number. Please roll again:"
+            str_to_print = ("{} " * no_max_rolls) + "have rolled the same highest number. Please roll again:\n"
             print(str_to_print.format(*player_max_rolls))
             rolls = []
 
@@ -154,14 +168,81 @@ def setup_game():
     return player_dict, players
 
 
-def play_game():
+def play_minigame(N_turns):
     """
-    In development. Plans to include computer players in future.
+    REDUNDANT FUNCTION AS 'HAVE_TURN' HAS CHANGED.
+    Simulates a player moving around the board, and collecting properties.
+    Extra rolls from doubles are included within the turn. 
     """
-    player_dict, players = setup_game()
     position = 0
     owned_properties = []
-    print(player_dict, players)
+
+    print("{:<10} {:<10} {:<10} {:<10} {:<10}\n".format('Turn', 'Roll', 'Position', 'Double', 'Property'))
+    for i in range(N_turns):
+        roll, position, double, current_property = have_turn(position, owned_properties)
+        print("{:<10} {:<10} {:<10} {:<10} {:<10}".format(i+1, roll, position, double, current_property))
+        while double == True:
+            roll, position, double, current_property = have_turn(position, owned_properties)
+            print("{:<10} {:<10} {:<10} {:<10} {:<10}".format('', roll, position, double, current_property))
+        print("")
+    
+    print("Owned properties:\n")
+    for prop in owned_properties:
+        print(prop)
+
+
+def play_game():
+    """
+    In development.
+    """
+    player_dict, players = setup_game()
+    # player_dict = {'a': ['wheelbarrow', 1500, 0, []], 
+    #                'b': ['dog', 1500, 0, []]}
+    # players = ['a', 'b']
+
+    print("#"*28)
+    print("Let the game begin")
+    print("#"*28 + '\n')
+    input("Press enter to continue\n")
+
+    turn = 1
+
+    while turn < 5: # arbitrary value, can change to something meaningful later
+
+        print("Turn {}\n".format(turn))
+
+        for player in players:
+
+            input("{}'s turn. Press enter to continue.\n".format(player))
+
+            ## read in data from player dictionary
+            player_entry = player_dict[player]
+            money             = player_entry[1]
+            position          = player_entry[2]
+            owned_properties  = player_entry[3]
+
+            ## player has their turn
+            position, double, money = have_turn(position, owned_properties, money)
+
+            ## if player rolls a double, they get another roll (this is currently infinite,
+            ## however this will need to be changed so that 3 doubles --> jail)
+            while double == True:
+                input("Rolled a double! Have another roll.\n")
+                position, double, money = have_turn(position, owned_properties, money)
+
+            ## put the data back into the dictionary
+            player_entry[1] = money
+            player_entry[2] = position
+            player_entry[3] = owned_properties
+
+            input("Press enter to continue\n")
+
+        turn += 1
+
+    ## print some values at the end of the game
+    print(player_dict)
+    print(all_owned_properties)
+    print(len(player_dict['alex'][3]) + len(player_dict['katie'][3]), len(all_owned_properties))
 
 
 if __name__ == '__main__':
