@@ -42,20 +42,18 @@ def have_turn(position, owned_properties, money):
     double: whether or not a double was rolled
     current_property: current property on board
     """
-    ## 1) Roll
+    ## Roll
     roll, double = roll_dice()
-    ## 2) Update board position
-    position += roll
-    ## 3) Check position number is on the board
-    position = position - len(gameboard) if position > len(gameboard)-1 else position
-    ## 4) Find current property, category and price
+    ## Update board position and ensure position number is on the board
+    position = (position + roll)  % len(gameboard)
+    ## Find current property, category and price
     current_property = gameboard.at[position, 'Label']
     current_category = gameboard.at[position, 'Category']
     current_price    = gameboard.at[position, 'Price']
-    ## 5) Print current values
+    ## Print current values
     print("Roll: {}\nPosition: {}\nDouble: {}\nCurrent property: {}\n".format(
     roll, position, double, current_property))
-    ## 6) If player has enough money and property not already bought --> option to buy it
+    ## If player has enough money and property not already bought --> option to buy it
     if current_price <= money and current_property not in all_owned_properties and current_category not in non_properties:
         while True:
             answer = input("Do you want to buy {} for £{}? (Y or N)\n".format(current_property, current_price))
@@ -195,10 +193,10 @@ def play_game():
     """
     In development.
     """
-    player_dict, players = setup_game()
-    # player_dict = {'a': ['wheelbarrow', 1500, 0, []], 
-    #                'b': ['dog', 1500, 0, []]}
-    # players = ['a', 'b']
+    # player_dict, players = setup_game()
+    player_dict = {'a': ['wheelbarrow', 1500, 0, []], 
+                   'b': ['dog', 1500, 0, []]}
+    players = ['a', 'b']
 
     print("#"*28)
     print("Let the game begin")
@@ -242,7 +240,6 @@ def play_game():
     ## print some values at the end of the game
     print(player_dict)
     print(all_owned_properties)
-    print(len(player_dict['alex'][3]) + len(player_dict['katie'][3]), len(all_owned_properties))
 
 
 if __name__ == '__main__':
