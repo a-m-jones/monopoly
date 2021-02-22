@@ -4,7 +4,7 @@ import pandas as pd
 
 ## Read in the game board from csv file
 gameboard = pd.read_csv('./game_board.txt', delimiter='\t')
-## Property categories taht can't be saved
+## Property categories that can't be bought
 non_properties = ['Other', 'Community Chest', 'Chance', 'Tax']
 ## List of all properties owned
 all_owned_properties = []
@@ -23,10 +23,11 @@ def roll_dice():
     die_2 = np.random.randint(low=1, high=7)
     value = die_1 + die_2
     double = True if die_1 == die_2 else False
-    return value, double
+    # return value, double
+    return 5, False
     
         
-def have_turn(position, owned_properties, money):
+def have_turn(player_dict, position, owned_properties, money):
     """
     Simulates a turn in a game (in development).
 
@@ -53,15 +54,24 @@ def have_turn(position, owned_properties, money):
     ## Print current values
     print("Roll: {}\nPosition: {}\nDouble: {}\nCurrent property: {}\n".format(
     roll, position, double, current_property))
+    ## Tax - remove money
+    if current_category == 'Tax':
+        print("{}. Pay {}.".format(current_property, current_price))
+        money = money - current_price
+    ## Land on owned property - pay that player rent. 
+    ## (This doesn't work correctly for utilities or stations yet.)
+    elif current_property in all_owned_properties and current_category not in non_properties:
+        print("Incomplete.")
+        print("{} is owned by {}. Pay them £{}.".format(1,2,3))
     ## If player has enough money and property not already bought --> option to buy it
-    if current_price <= money and current_property not in all_owned_properties and current_category not in non_properties:
+    elif current_price <= money and current_property not in all_owned_properties and current_category not in non_properties:
         while True:
             answer = input("Do you want to buy {} for £{}? (Y or N)\n".format(current_property, current_price))
             if answer in ['y', 'Y', 'yes', 'Yes']:
                 owned_properties.append(current_property)
                 all_owned_properties.append(current_property)
                 money = money - current_price
-                print("Bought {} for £{}. You have £{} left.\n".format(current_property, current_price, money))
+                print("Bought {} for £{}.\n".format(current_property, current_price))
                 break
             elif answer in ['n', 'N', 'no', 'No']:
                 ## will need to implement option for others to buy in future
@@ -69,6 +79,7 @@ def have_turn(position, owned_properties, money):
                 break
             else:
                 print("Must choose either Y or N!")
+    print("You have £{} left.\n".format(money))
 
     return position, double, money
         
@@ -205,7 +216,7 @@ def play_game():
 
     turn = 1
 
-    while turn < 5: # arbitrary value, can change to something meaningful later
+    while turn < 3: # arbitrary value, can change to something meaningful later
 
         print("Turn {}\n".format(turn))
 
@@ -214,19 +225,19 @@ def play_game():
             input("{}'s turn. Press enter to continue.\n".format(player))
 
             ## read in data from player dictionary
-            player_entry = player_dict[player]
+            player_entry      = player_dict[player]
             money             = player_entry[1]
             position          = player_entry[2]
             owned_properties  = player_entry[3]
 
             ## player has their turn
-            position, double, money = have_turn(position, owned_properties, money)
+            position, double, money = have_turn(player_dict, position, owned_properties, money)
 
             ## if player rolls a double, they get another roll (this is currently infinite,
             ## however this will need to be changed so that 3 doubles --> jail)
             while double == True:
                 input("Rolled a double! Have another roll.\n")
-                position, double, money = have_turn(position, owned_properties, money)
+                position, double, money = have_turn(player_dict, position, owned_properties, money)
 
             ## put the data back into the dictionary
             player_entry[1] = money
